@@ -184,30 +184,30 @@ PBIMETADATARESTAPIGCC.Publish = [
 PBIMETADATARESTAPIGCC.Icons = [
     Icon16 = {
         Extension.Contents(
-            "PBIMETADATARESTAPIGCC16.png"
+            "powerquery-connector-pbi-metadata-rest-api-gcc16.png"
         ),
         Extension.Contents(
-            "PBIMETADATARESTAPIGCC20.png"
+            "powerquery-connector-pbi-metadata-rest-api-gcc20.png"
         ),
         Extension.Contents(
-            "PBIMETADATARESTAPIGCC24.png"
+            "powerquery-connector-pbi-metadata-rest-api-gcc24.png"
         ),
         Extension.Contents(
-            "PBIMETADATARESTAPIGCC32.png"
+            "powerquery-connector-pbi-metadata-rest-api-gcc32.png"
         )
     },
     Icon32 = {
         Extension.Contents(
-            "PBIMETADATARESTAPIGCC32.png"
+            "powerquery-connector-pbi-metadata-rest-api-gcc32.png"
         ),
         Extension.Contents(
-            "PBIMETADATARESTAPIGCC40.png"
+            "powerquery-connector-pbi-metadata-rest-api-gcc40.png"
         ),
         Extension.Contents(
-            "PBIMETADATARESTAPIGCC48.png"
+            "powerquery-connector-pbi-metadata-rest-api-gcc48.png"
         ),
         Extension.Contents(
-            "PBIMETADATARESTAPIGCC64.png"
+            "powerquery-connector-pbi-metadata-rest-api-gcc64.png"
         )
     }
 ];
