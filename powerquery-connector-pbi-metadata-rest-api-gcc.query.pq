@@ -6,8 +6,9 @@ shared MyExtension.UnitTest =
     Source = PBIMETADATARESTAPIGCC.FunctionCatalog(),
    
     /*Variables*/ 
-    RefreshID = "{INSERT REFRESH ID}",
-    DataflowID = "{INSERT DATAFLOW ID}",
+    RefreshID = "{REFRESH ID}",
+    DataflowID = "{DATAFLOW ID}",
+    WorskpaceID = "{WORKSPACE ID}",
 
     // Extracts Function from group
     _GetFunction = (_func_key as text) =>
@@ -16,15 +17,29 @@ shared MyExtension.UnitTest =
         in
             Result,
 
+    /* Apps */
+    GetAppDetails = _GetFunction("GetAppDetails"),
     /* Dataflows*/
     GetDataflowGallery = _GetFunction("GetDataflowGallery"),
     GetDataflowTranscationDetails = _GetFunction("GetDataflowTranscationDetails"),
     GetDataflowExtendedSettings = _GetFunction("GetDataflowExtendedSettings"),
+   
 
     // Fact(<Name of the Test>, <Expected Value>, <Actual Value>)
     // <Expected Value> and <Actual Value> can be a literal or let statement  
     facts =
     {        
+     /*****************
+     Apps
+     *****************/
+    Fact("GetAppDetails Should Be a Function",
+            true,
+            Value.Is(GetAppDetails,Function.Type)
+    ),  
+    Fact("GetAppDetails Should Return a List",
+             true,
+             List.Count(Json.Document(GetAppDetails(WorkspaceID))) > 0
+    ),        
      /*****************
      DATAFLOWS
      *****************/

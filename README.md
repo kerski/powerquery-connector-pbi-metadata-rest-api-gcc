@@ -91,7 +91,14 @@ With the Function Catalog created, please follow these steps to leverage the fun
 ### Functions Implemented
 
 These functions call end points that are not a part of the supported Power BI REST APIs; however, these functions are critical to getting
-important information programmatically for monitoring.  Below are the end points implemented along with the link to vote up this end point to become part of Microsoft's main REST API offering.
+important information programmatically for monitoring. 
+
+Below are the end points implemented along with the link to vote up this end point to become part of Microsoft's main REST API offering.
+
+### Apps
+| End Point                      | Description  | Fabric Idea |
+|:-----------------------------|:-------------|:------------------|
+| GetAppDetails          | Returns details on an App based on the Workspace id that hosts that App.  | [REST API Cmdlet for getting all outstanding Pending Access requests](https://bit.ly/3KJnvto) |
 
 ### Dataflows
 | End Point                      | Description  | Fabric Idea |

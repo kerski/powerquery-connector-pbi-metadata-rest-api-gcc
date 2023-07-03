@@ -1,10 +1,10 @@
 /*
     Author: John Kerski
 
-This connector wraps a few of the "Get" endpoints in the Power BI Metadata API, so that OAuth can be used to 
+This connector wraps a few of the "Get" endpoints in the Power BI Metadata API, so that OAuth can be used to
 authenticate to the service.  
    
-The endpoints for this custom connector on NOT part of the v1.0 Microsoft Power REST APIS. Microsoft lacks 
+The endpoints for this custom connector on NOT part of the v1.0 Microsoft Power REST APIS. Microsoft lacks
 API support for dataflows.  As of July 2023, Microsoft does not provide APIs for:
 
     1) Error Details in Dataflow Refreshes
@@ -13,8 +13,8 @@ API support for dataflows.  As of July 2023, Microsoft does not provide APIs for
 
 *This lack of support severely hinders the ability to monitor for issues.*
 
-This connector serves as a way to have a library of Power Query functions to build datasets 
-without the need for storing client secrets or passwords in the dataset.  The custom data connector 
+This connector serves as a way to have a library of Power Query functions to build datasets
+without the need for storing client secrets or passwords in the dataset.  The custom data connector
 will need to be installed in the a Power BI Gateway in order to refresh datasets leveraging this custom connector.
 
 */
@@ -31,6 +31,8 @@ shared PBIMETADATARESTAPIGCC.FunctionCatalog = () =>
 let
     objects = #table(
             {"Name","Key","Data","ItemKind","ItemName","IsLeaf"},{
+            /* Apps */
+            {"GetAppDetails","GetAppDetails",PBIMETADATARESTAPIGCC.GetAppDetails,"Function","GetAppDetails",true},
             /* Dataflows */            
             {"GetDataflowGallery","GetDataflowGallery",PBIMETADATARESTAPIGCC.GetDataflowGallery,"Function","GetDataflowGallery",true},                                                      
             {"GetDataflowTranscationDetails","GetDataflowTranscationDetails",PBIMETADATARESTAPIGCC.GetDataflowTranscationDetails,"Function","GetDataflowTranscationDetails",true},                                                      
@@ -39,6 +41,42 @@ let
     navTable = Table.ForceToNavigationTable(objects, {"Key"},"Name","Data","ItemKind","ItemName","IsLeaf")
 in
     navTable;
+
+/*****************
+    Apps
+*****************/
+/*** GetAppDetails **/
+shared PBIMETADATARESTAPIGCC.GetAppDetails = Value.ReplaceType(
+    GetAppDetails,
+    GetAppDetailsType
+);
+
+GetAppDetailsType = type function (
+    optional transactionID as (
+        type text meta [
+            Documentation.FieldCaption = "Group ID",
+            Documentation.FieldDescription = "Group ID",
+            Documentation.SampleValues = {
+                "xxx-yyyy"
+            }
+        ]
+    )
+) as table meta [
+    Documentation.Name = "PBIMETADATARESTAPIGCC.GetAppDetails",
+    Documentation.LongDescription = "Returns details on an App based on the Workspace id that hosts that App.",
+    Documentation.Examples = {
+        [
+            Code = "=PBIMETADATARESTAPIGCC.GetAppDetails(""xxx-yyyy"")",
+            Result = "Non-traditional API endpoint"
+        ]
+    }
+];
+
+GetAppDetails = (optional workspaceId as text) =>
+    let
+        result = GetMetadataJSON("/metadata/appmodel/apps/" & workspaceId & "?requestDataType=7")
+    in
+        result;
 
 /*****************
     Dataflows
