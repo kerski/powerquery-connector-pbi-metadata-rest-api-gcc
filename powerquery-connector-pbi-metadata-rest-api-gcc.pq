@@ -18,7 +18,7 @@ without the need for storing client secrets or passwords in the dataset.  The cu
 will need to be installed in the a Power BI Gateway in order to refresh datasets leveraging this custom connector.
 
 */
-[Version = "1.0.0"]
+[Version = "1.0.1"]
 section PBIMETADATARESTAPIGCC;
 [
     DataSource.Kind = "PBIMETADATARESTAPIGCC",
