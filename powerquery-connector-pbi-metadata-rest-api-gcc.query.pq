@@ -7,8 +7,7 @@ shared MyExtension.UnitTest =
    
     /*Variables*/ 
     RefreshID = "{REFRESH ID}",
-    DataflowID = "{DATAFLOW ID}",
-    WorskpaceID = "{WORKSPACE ID}",
+    WorkspaceID = "{WORKSPACE ID}",
 
     // Extracts Function from group
     _GetFunction = (_func_key as text) =>
@@ -68,7 +67,7 @@ shared MyExtension.UnitTest =
         ),  
         Fact("GetDataflowExtendedSettings Should Return a JSON object",
              true,
-             Value.Is(Json.Document(GetDataflowExtendedSettings(DataflowID)),Record.Type)
+             Value.Is(Json.Document(GetDataflowExtendedSettings(WorkspaceID)),Record.Type)
         )                        
     },
     results = Table.ReverseRows(Table.FromRecords(facts)),

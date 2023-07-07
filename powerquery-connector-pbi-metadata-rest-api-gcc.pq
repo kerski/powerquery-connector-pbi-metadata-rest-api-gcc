@@ -18,7 +18,7 @@ without the need for storing client secrets or passwords in the dataset.  The cu
 will need to be installed in the a Power BI Gateway in order to refresh datasets leveraging this custom connector.
 
 */
-[Version = "1.0.1"]
+[Version = "1.0.2"]
 section PBIMETADATARESTAPIGCC;
 [
     DataSource.Kind = "PBIMETADATARESTAPIGCC",
@@ -146,10 +146,10 @@ shared PBIMETADATARESTAPIGCC.GetDataflowExtendedSettings = Value.ReplaceType(
 );
 
 GetDataflowExtendedSettingsType = type function (
-    optional transactionID as (
+    optional workspaceID as (
         type text meta [
-            Documentation.FieldCaption = "Internal Dataflow ID",
-            Documentation.FieldDescription = "Internal Dataflow ID",
+            Documentation.FieldCaption = "Internal Workspace ID",
+            Documentation.FieldDescription = "Internal Workspace ID",
             Documentation.SampleValues = {
                 "123456"
             }
@@ -157,7 +157,7 @@ GetDataflowExtendedSettingsType = type function (
     )
 ) as table meta [
     Documentation.Name = "PBIMETADATARESTAPIGCC.GetDataflowExtendedSettings",
-    Documentation.LongDescription = "Returns a list of details for a specific dataflow.",
+    Documentation.LongDescription = "Returns a list of details for dataflows in a specific workspace.",
     Documentation.Examples = {
         [
             Code = "=PBIMETADATARESTAPIGCC.GetDataflowExtendedSettings(""123456"")",
@@ -166,9 +166,9 @@ GetDataflowExtendedSettingsType = type function (
     }
 ];
 
-GetDataflowExtendedSettings = (optional dataflowId as text) =>
+GetDataflowExtendedSettings = (optional workspaceID as text) =>
     let
-        result = GetMetadataJSON("/metadata/dataflows/" & dataflowId & "/extendedSettings")
+        result = GetMetadataJSON("/metadata/dataflows/" & workspaceID & "/extendedSettings")
     in
         result;        
 
