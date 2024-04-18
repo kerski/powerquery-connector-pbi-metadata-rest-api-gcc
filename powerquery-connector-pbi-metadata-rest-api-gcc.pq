@@ -36,7 +36,13 @@ let
             /* Dataflows */            
             {"GetDataflowGallery","GetDataflowGallery",PBIMETADATARESTAPIGCC.GetDataflowGallery,"Function","GetDataflowGallery",true},                                                      
             {"GetDataflowTranscationDetails","GetDataflowTranscationDetails",PBIMETADATARESTAPIGCC.GetDataflowTranscationDetails,"Function","GetDataflowTranscationDetails",true},                                                      
-            {"GetDataflowExtendedSettings","GetDataflowExtendedSettings",PBIMETADATARESTAPIGCC.GetDataflowExtendedSettings,"Function","GetDataflowExtendedSettings",true}    
+            {"GetDataflowExtendedSettings","GetDataflowExtendedSettings",PBIMETADATARESTAPIGCC.GetDataflowExtendedSettings,"Function","GetDataflowExtendedSettings",true},    
+            /* Pipelines */
+            {"GetALMPipelines","GetALMPipelines",PBIMETADATARESTAPIGCC.GetALMPipelines,"Function","GetALMPipelines",true},    
+            {"DiscoverArtifacts","DiscoverArtifacts",PBIMETADATARESTAPIGCC.DiscoverArtifacts,"Function","DiscoverArtifacts",true},    
+            /* Datasets */
+            {"GetSharedDatasets","GetSharedDatasets",PBIMETADATARESTAPIGCC.GetSharedDatasets,"Function","GetSharedDatasets",true},   
+            {"GetOneDriveRefreshEnforcementPolicy","GetOneDriveRefreshEnforcementPolicy",PBIMETADATARESTAPIGCC.GetOneDriveRefreshEnforcementPolicy,"Function","GetOneDriveRefreshEnforcementPolicy",true}
         }),
     navTable = Table.ForceToNavigationTable(objects, {"Key"},"Name","Data","ItemKind","ItemName","IsLeaf")
 in
@@ -172,6 +178,160 @@ GetDataflowExtendedSettings = (optional workspaceID as text) =>
     in
         result;        
 
+/*****************
+    Pipelines
+*****************/
+// https://wabi-us-gov-virginia-redirect.analysis.usgovcloudapi.net/metadata/almpipelines
+
+// GetALMPipelines
+shared PBIMETADATARESTAPIGCC.GetALMPipelines = Value.ReplaceType(
+    GetALMPipelines,
+    GetALMPipelinesType
+);
+
+GetALMPipelinesType = type function (
+) as table meta [
+    Documentation.Name = "PBIMETADATARESTAPIGCC.GetALMPipelines",
+    Documentation.LongDescription = "Returns metadata for deployment pipelines of current signed-in user",
+    Documentation.Examples = {
+        [
+            Code = "=PBIMETADATARESTAPIGCC.GetALMPipelines()",
+            Result = "Non-traditional API endpoint"
+        ]
+    }
+];
+
+GetALMPipelines = () =>
+    let
+        result = GetMetadataJSON("/metadata/almpipelines")
+    in
+        result; 
+
+// DiscoverArtifacts 
+
+shared PBIMETADATARESTAPIGCC.DiscoverArtifacts = Value.ReplaceType(
+    DiscoverArtifacts,
+    DiscoverArtifactsType
+);
+
+DiscoverArtifactsType = type function (    
+    optional pipelineID as (
+        type text meta [
+            Documentation.FieldCaption = "Internal Pipeline ID",
+            Documentation.FieldDescription = "Internal Pipeline ID",
+            Documentation.SampleValues = {
+                "123"
+            }
+        ]
+    ),
+    optional sourceObjectID as (
+        type text meta [
+            Documentation.FieldCaption = "GUID of the artifact in the source workspace",
+            Documentation.FieldDescription = "GUID of the artifact in the source workspace",
+            Documentation.SampleValues = {
+                "xxxxxxxx-8123-497d-9fc0-cefae4b8d11e"
+            }
+        ]
+    ),
+    optional targetObjectID as (
+        type text meta [
+            Documentation.FieldCaption = "GUID of the artifact in the target workspace",
+            Documentation.FieldDescription = "GUID of the artifact in the target workspace",
+            Documentation.SampleValues = {
+                "xxxxxxxx-1234-497d-9fc0-cefae4b8d11e"
+            }
+        ]
+    ),
+    optional typeName as (
+        type text meta [
+            Documentation.FieldCaption = "Type of artifact in Power BI",
+            Documentation.FieldDescription = "Type of artifact in Power BI",
+            Documentation.SampleValues = {
+                "dataset"
+            }
+        ]
+    )            
+) as table meta [
+    Documentation.Name = "PBIMETADATARESTAPIGCC.DiscoverArtifacts",
+    Documentation.LongDescription = "Returns metadata for pipeline associated with the artifact.",
+    Documentation.Examples = {
+        [
+            Code = "=PBIMETADATARESTAPIGCC.DiscoverArtifacts()",
+            Result = "Non-traditional API endpoint"
+        ]
+    }
+];
+
+DiscoverArtifacts = (optional pipelineID as text, optional sourceObjectID as text, optional targetObjectID as text, optional typeName as text) =>
+    let
+        params = [RelativePath = "/metadata/almpipelines/" & pipelineID & "/DiscoverArtifacts",
+                    Headers = [ #"Content-Type" = "application/json"],
+                    Content = Text.ToBinary("{""artifacts"":[{""sourceObjectId"":""" & sourceObjectID & """,""targetObjectId"":""" & targetObjectID & """,""type"":"""& typeName &"""}]}")
+                ],   
+
+        result = PostMetadataJSON(params)     
+    in
+        result; 
+
+/*****************
+    Datasets
+*****************/
+// GetSharedDatasets 
+shared PBIMETADATARESTAPIGCC.GetSharedDatasets = Value.ReplaceType(
+    GetSharedDatasets,
+    GetSharedDatasetsType
+);
+
+GetSharedDatasetsType = type function (
+) as table meta [
+    Documentation.Name = "PBIMETADATARESTAPIGCC.GetSharedDatasets",
+    Documentation.LongDescription = "Returns metadata for datasets of current signed-in user",
+    Documentation.Examples = {
+        [
+            Code = "=PBIMETADATARESTAPIGCC.GetSharedDatasets()",
+            Result = "Non-traditional API endpoint"
+        ]
+    }
+];
+
+GetSharedDatasets = () =>
+    let
+        result = GetMetadataJSON("/metadata/gallery/SharedDatasets")
+    in
+        result; 
+
+// GetOneDriveRefreshEnforcementPolicy
+shared PBIMETADATARESTAPIGCC.GetOneDriveRefreshEnforcementPolicy = Value.ReplaceType(
+    GetOneDriveRefreshEnforcementPolicy,
+    GetOneDriveRefreshEnforcementPolicyType
+);
+
+GetOneDriveRefreshEnforcementPolicyType = type function (
+    optional datasetID as (
+        type text meta [
+            Documentation.FieldCaption = "Internal Dataset ID",
+            Documentation.FieldDescription = "Internal Dataset ID",
+            Documentation.SampleValues = {
+                "123456"
+            }
+        ]
+    )
+) as table meta [
+    Documentation.Name = "PBIMETADATARESTAPIGCC.GetOneDriveRefreshEnforcementPolicy",
+    Documentation.LongDescription = "Returns OneDrive dataset settings for specific dataset",
+    Documentation.Examples = {
+        [
+            Code = "=PBIMETADATARESTAPIGCC.GetOneDriveRefreshEnforcementPolicy(""123456"")",
+            Result = "Non-traditional API endpoint"
+        ]
+    }
+];
+
+GetOneDriveRefreshEnforcementPolicy = (optional datasetID as text) =>
+    let
+        result = GetMetadataJSON("metadata/oneDriveRefresh/" & datasetID & "/refreshEnforcementPolicy")
+    in
+        result;  
 
 /*****************
     HELPER FUNCTIONS
@@ -189,6 +349,19 @@ GetMetadataJSON = (optional relPath as text) =>
         result = Text.FromBinary(webSource)
     in
         result;
+
+PostMetadataJSON = (optional params as record) =>
+    let
+        //Post
+        //Hard-coded Base URL because Power BI Service won't recognize parameter despite numerous attempts
+        webSource = Web.Contents(
+            "https://wabi-us-gov-virginia-redirect.analysis.usgovcloudapi.net",
+            params
+        ),
+        //Convert to Json
+        result = Text.FromBinary(webSource)
+    in
+        result;      
 
 
 // Data Source Kind description

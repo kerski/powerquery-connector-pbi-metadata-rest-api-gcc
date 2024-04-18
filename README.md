@@ -2,11 +2,13 @@
 
 This connector wraps a few of the "Get" endpoints in the Power BI Metadata API, so that OAuth can be used to authenticate to the service.  
    
-The endpoints for this custom connector on NOT part of the v1.0 Microsoft Power REST APIS. Microsoft lacks API support for dataflows.  As of July 2023, Microsoft does not provide APIs for:
+The endpoints for this custom connector on NOT part of the v1.0 Microsoft Power REST APIS. Microsoft lacks API support for Dataflows Gen1, Apps, and Deployment Pipleines.  As of April 2024, Microsoft does not provide APIs for:
 
     1) Error Details in Dataflow Refreshes
     2) Whether a Dataflow is Scheduled for a Refresh
     3) The details of the refresh schedule
+    4) What are the pending requests for an App
+    5) What are the deployment settings for each artifact in a deployment pipeline stage
 
 <b>NOTE: This lack of support severely hinders the ability to monitor for issues. <u>For each endpoint listed in [Functions Implemented](#functions-implemented), I have identified the Fabric idea to vote up, so it can become part of Microsoft's supported REST APIs.</u></b>
 
@@ -107,6 +109,11 @@ Below are the end points implemented along with the link to vote up this end poi
 | GetDataflowTranscationDetails | Returns a list of transactions details for a specific dataflow refresh based on the Refresh ID.  | [Add Dataflow failure reason to the Transactions API](https://ideas.fabric.microsoft.com/ideas/idea/?ideaid=2fad1514-3738-ec11-b76a-281878de77da) |
 | GetDataflowExtendedSettings             | Returns a list of details for a specific dataflow. |[API for Get Refresh Schedule of Dataflows](https://bit.ly/3MLztFC) |
 
+### Pipelines
+| End Point                      | Description  | Fabric Idea |
+|:-----------------------------|:-------------|:------------------|
+| GetDataflowGallery          | Returns a list of all dataflows and properties from the metadata API.  | [API for Get Refresh Schedule of Dataflows](https://bit.ly/3MLztFC) |
+| DiscoverArtifacts | Returns a list of data source or parameter rules associated with the artifact (ex. semantic model) applied to the next stage.  | [Add Dataflow failure reason to the Transactions API](https://ideas.fabric.microsoft.com/ideas/idea/?ideaid=c348e92e-1eda-ed11-9139-281878ded556) |
 
 ### On-Premises Gateway
 

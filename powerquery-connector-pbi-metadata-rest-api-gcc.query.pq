@@ -6,8 +6,21 @@ shared MyExtension.UnitTest =
     Source = PBIMETADATARESTAPIGCC.FunctionCatalog(),
    
     /*Variables*/ 
-    RefreshID = "{REFRESH ID}",
-    WorkspaceID = "{WORKSPACE ID}",
+    RefreshID = "{REFRESH_ID}",
+    /* App Details GUID */
+    AppDetailsGUID = "{APP_DETAILS_GUID}",
+    /* Internal Workspace ID*/
+    WorkspaceID = "{WORKSPACE_ID}",
+    /* Workspace GUID */
+    WorkspaceGUID = "{WORKSPACE_GUID}",
+    /* Internal Dataset ID */
+    DatasetID = "{DATASET_ID}",
+
+    /* Pipeline ID */
+    PipelineID = "{PIPELINE_ID}",
+    SourceGUID = "{SOURCE_GUID}",
+    TargetGUID = "{TARGET_GUID}",
+    TypeName = "dataset",
 
     // Extracts Function from group
     _GetFunction = (_func_key as text) =>
@@ -22,7 +35,11 @@ shared MyExtension.UnitTest =
     GetDataflowGallery = _GetFunction("GetDataflowGallery"),
     GetDataflowTranscationDetails = _GetFunction("GetDataflowTranscationDetails"),
     GetDataflowExtendedSettings = _GetFunction("GetDataflowExtendedSettings"),
-   
+    GetSharedDatasets = _GetFunction("GetSharedDatasets"),
+    GetOneDriveRefreshEnforcementPolicy = _GetFunction("GetOneDriveRefreshEnforcementPolicy"),
+    /* Pipelines */
+    GetALMPipelines = _GetFunction("GetALMPipelines"),
+    DiscoverArtifacts = _GetFunction("DiscoverArtifacts"),
 
     // Fact(<Name of the Test>, <Expected Value>, <Actual Value>)
     // <Expected Value> and <Actual Value> can be a literal or let statement  
@@ -37,7 +54,7 @@ shared MyExtension.UnitTest =
     ),  
     Fact("GetAppDetails Should Return a List",
              true,
-             List.Count(Json.Document(GetAppDetails(WorkspaceID))) > 0
+             List.Count(Json.Document(GetAppDetails(AppDetailsGUID))) > 0
     ),        
      /*****************
      DATAFLOWS
@@ -57,8 +74,8 @@ shared MyExtension.UnitTest =
              Value.Is(GetDataflowTranscationDetails,Function.Type)
         ),
         Fact("GetDataflowTranscationDetails Should Return Array of Transactions",
-             3,
-             List.Count(Json.Document(GetDataflowTranscationDetails(RefreshID)))
+             true,
+             List.Count(Json.Document(GetDataflowTranscationDetails(RefreshID))) > 3
         ),
         /* GetDataflowExtendedSettings */
         Fact("GetDataflowExtendedSettings Should Be a Function",
@@ -68,7 +85,46 @@ shared MyExtension.UnitTest =
         Fact("GetDataflowExtendedSettings Should Return a JSON object",
              true,
              Value.Is(Json.Document(GetDataflowExtendedSettings(WorkspaceID)),Record.Type)
-        )                        
+        ),
+        /*****************
+        Pipelines
+        *****************/
+        Fact("GetALMPipelines Should Be a Function",
+                true,
+                Value.Is(GetALMPipelines,Function.Type)
+        ),    
+        Fact("GetALMPipelines Should Return a List",
+                true,
+                List.Count(Json.Document(GetALMPipelines())) > 0
+        ), 
+        Fact("DiscoverArtifacts Should Be a Function",
+                true,
+                Value.Is(DiscoverArtifacts,Function.Type)
+        ), 
+        Fact("DiscoverArtifacts Should Return a List",
+                true,
+               List.Count(Record.ToList(Json.Document(DiscoverArtifacts(PipelineID,SourceGUID,TargetGUID,TypeName)))) > 0
+        ),         
+
+        /*****************
+        Datasets
+        *****************/
+        Fact("GetSharedDatasets Should Be a Function",
+                true,
+                Value.Is(GetSharedDatasets,Function.Type)
+        ),  
+        Fact("GetSharedDatasets Should Return a List",
+                true,
+                List.Count(Json.Document(GetSharedDatasets())) > 0
+        ),
+        Fact("GetOneDriveRefreshEnforcementPolicy Should Be a Function",
+                true,
+                Value.Is(GetOneDriveRefreshEnforcementPolicy,Function.Type)
+        ),
+        Fact("GetOneDriveRefreshEnforcementPolicy Should Return object with refreshEnforcmentPolicy",
+                2,
+                Json.Document(GetOneDriveRefreshEnforcementPolicy(DatasetID))[refreshEnforcementPolicy]
+        )                                          
     },
     results = Table.ReverseRows(Table.FromRecords(facts)),
     // Only return failed tests
