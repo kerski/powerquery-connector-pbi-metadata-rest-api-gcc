@@ -10,6 +10,7 @@ The endpoints for this custom connector on NOT part of the v1.0 Microsoft Power 
     4) What are the pending requests for an App
     5) What are the deployment settings for each artifact in a deployment pipeline stage
 
+
 <b>NOTE: This lack of support severely hinders the ability to monitor for issues. <u>For each endpoint listed in [Functions Implemented](#functions-implemented), I have identified the Fabric idea to vote up, so it can become part of Microsoft's supported REST APIs.</u></b>
 
 This connector serves as a way to have a library of Power Query functions to build datasets without the need for storing client secrets or passwords in the dataset.  The custom data connector will need to be installed in the a Power BI Gateway in order to refresh datasets leveraging this custom connector.
