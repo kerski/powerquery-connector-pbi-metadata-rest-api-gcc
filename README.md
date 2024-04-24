@@ -57,7 +57,7 @@ Because this is a custom data connector you have to choose this option in order 
 
 10. The Navigator prompt will appear (example below).
 
-![Navigator prompt](./documentation/images/navigator-metadata.png)
+![Navigator prompt](./documentation/images/navigator.png)
 
 11. Choose the "Get Dataflows Gallery" option and you should see a json response (see example below).
 
