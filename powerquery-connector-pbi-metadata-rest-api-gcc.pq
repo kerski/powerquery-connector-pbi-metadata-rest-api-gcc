@@ -18,7 +18,7 @@ without the need for storing client secrets or passwords in the dataset.  The cu
 will need to be installed in the a Power BI Gateway in order to refresh datasets leveraging this custom connector.
 
 */
-[Version = "1.0.2"]
+[Version = "1.0.4"]
 section PBIMETADATARESTAPIGCC;
 [
     DataSource.Kind = "PBIMETADATARESTAPIGCC",
@@ -40,6 +40,7 @@ let
             /* Pipelines */
             {"GetALMPipelines","GetALMPipelines",PBIMETADATARESTAPIGCC.GetALMPipelines,"Function","GetALMPipelines",true},    
             {"DiscoverArtifacts","DiscoverArtifacts",PBIMETADATARESTAPIGCC.DiscoverArtifacts,"Function","DiscoverArtifacts",true},    
+            {"GetALMPipelineOperation","GetALMPipelineOperation",@PBIMETADATARESTAPIGCC.GetALMPipelineOperation,"Function","GetALMPipelineOperation",true},
             /* Datasets */
             {"GetSharedDatasets","GetSharedDatasets",PBIMETADATARESTAPIGCC.GetSharedDatasets,"Function","GetSharedDatasets",true},   
             {"GetOneDriveRefreshEnforcementPolicy","GetOneDriveRefreshEnforcementPolicy",PBIMETADATARESTAPIGCC.GetOneDriveRefreshEnforcementPolicy,"Function","GetOneDriveRefreshEnforcementPolicy",true}
@@ -181,8 +182,6 @@ GetDataflowExtendedSettings = (optional workspaceID as text) =>
 /*****************
     Pipelines
 *****************/
-// https://wabi-us-gov-virginia-redirect.analysis.usgovcloudapi.net/metadata/almpipelines
-
 // GetALMPipelines
 shared PBIMETADATARESTAPIGCC.GetALMPipelines = Value.ReplaceType(
     GetALMPipelines,
@@ -206,6 +205,49 @@ GetALMPipelines = () =>
         result = GetMetadataJSON("/metadata/almpipelines")
     in
         result; 
+
+
+// GetALMPipelineOperation
+shared PBIMETADATARESTAPIGCC.GetALMPipelineOperation = Value.ReplaceType(
+    GetALMPipelineOperation,
+    GetALMPipelineOperationType
+);
+
+GetALMPipelineOperationType = type function (
+    optional pipelineID as (
+        type text meta [
+            Documentation.FieldCaption = "Internal Pipeline ID",
+            Documentation.FieldDescription = "Internal Pipeline ID",
+            Documentation.SampleValues = {
+                "123"
+            }
+        ]
+    ),
+    optional operationID as (
+        type text meta [
+            Documentation.FieldCaption = "GUID of the operation in the deployment pipeline",
+            Documentation.FieldDescription = "GUID of the operation in the deployment pipeline",
+            Documentation.SampleValues = {
+                "xxxxxxxx-8123-497d-9fc0-cefae4b8d11e"
+            }
+        ]
+    )    
+) as table meta [
+    Documentation.Name = "PBIMETADATARESTAPIGCC.GetALMPipelineOperation",
+    Documentation.LongDescription = "Returns a list of details for dataflows in a specific workspace.",
+    Documentation.Examples = {
+        [
+            Code = "=PBIMETADATARESTAPIGCC.GetALMPipelineOperation(""123"",""xxxxxxxx-8123-497d-9fc0-cefae4b8d11e"")",
+            Result = "Non-traditional API endpoint"
+        ]
+    }
+];
+
+GetALMPipelineOperation = (optional pipelineID as text, optional operationID) =>
+    let
+        result = GetMetadataJSON("/metadata/almpipelines/" & pipelineID & "/operations/" & operationID)
+    in
+        result;           
 
 // DiscoverArtifacts 
 

@@ -113,8 +113,9 @@ Below are the end points implemented along with the link to vote up this end poi
 ### Pipelines
 | End Point                      | Description  | Fabric Idea |
 |:-----------------------------|:-------------|:------------------|
-| GetDataflowGallery          | Returns a list of all dataflows and properties from the metadata API.  | [API for Get Refresh Schedule of Dataflows](https://bit.ly/3MLztFC) |
-| DiscoverArtifacts | Returns a list of data source or parameter rules associated with the artifact (ex. semantic model) applied to the next stage.  | [Add Dataflow failure reason to the Transactions API](https://ideas.fabric.microsoft.com/ideas/idea/?ideaid=c348e92e-1eda-ed11-9139-281878ded556) |
+| GetALMPipelines          | Returns a list of all pipelines for the logged in user.  | [Pipelines - Deployment rules - Visibility for non-Artifact Owner](https://ideas.fabric.microsoft.com/ideas/idea/?ideaid=c348e92e-1eda-ed11-9139-281878ded556) |
+| DiscoverArtifacts | Returns a list of data source or parameter rules associated with the artifact (ex. semantic model) applied to the next stage.  | [Pipelines - Deployment rules - Visibility for non-Artifact Owner](https://ideas.fabric.microsoft.com/ideas/idea/?ideaid=c348e92e-1eda-ed11-9139-281878ded556) |
+| GetALMPipelineOperation | Returns a list of changes applied to a deployment between stages for a specific pipeline operation.  | [Deployment pipeline as a data source to expose deployment history data for custom dashboards and reports](https://ideas.fabric.microsoft.com/ideas/idea/?ideaid=0f038b88-294a-ed11-97b2-281878dec973) |
 
 ### On-Premises Gateway
 

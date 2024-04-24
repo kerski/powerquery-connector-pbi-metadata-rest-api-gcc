@@ -21,6 +21,7 @@ shared MyExtension.UnitTest =
     SourceGUID = "{SOURCE_GUID}",
     TargetGUID = "{TARGET_GUID}",
     TypeName = "dataset",
+    PipelineOperationID = "{PIPELINE_OPERATION_ID}",
 
     // Extracts Function from group
     _GetFunction = (_func_key as text) =>
@@ -40,7 +41,7 @@ shared MyExtension.UnitTest =
     /* Pipelines */
     GetALMPipelines = _GetFunction("GetALMPipelines"),
     DiscoverArtifacts = _GetFunction("DiscoverArtifacts"),
-
+    GetALMPipelineOperation = _GetFunction("GetALMPipelineOperation"),
     // Fact(<Name of the Test>, <Expected Value>, <Actual Value>)
     // <Expected Value> and <Actual Value> can be a literal or let statement  
     facts =
@@ -105,7 +106,14 @@ shared MyExtension.UnitTest =
                 true,
                List.Count(Record.ToList(Json.Document(DiscoverArtifacts(PipelineID,SourceGUID,TargetGUID,TypeName)))) > 0
         ),         
-
+        Fact("GetALMPipelineOperation Should Be a Function",
+                true,
+                Value.Is(GetALMPipelineOperation,Function.Type)
+        ), 
+        Fact("GetALMPipelineOperation Should Return a List",
+               true,
+               List.Count(Record.ToList(Json.Document(GetALMPipelineOperation(PipelineID,PipelineOperationID)))) > 0
+        ),        
         /*****************
         Datasets
         *****************/
