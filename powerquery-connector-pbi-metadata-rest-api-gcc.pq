@@ -39,8 +39,9 @@ let
             {"GetDataflowExtendedSettings","GetDataflowExtendedSettings",PBIMETADATARESTAPIGCC.GetDataflowExtendedSettings,"Function","GetDataflowExtendedSettings",true},    
             /* Pipelines */
             {"GetALMPipelines","GetALMPipelines",PBIMETADATARESTAPIGCC.GetALMPipelines,"Function","GetALMPipelines",true},    
-            {"DiscoverArtifacts","DiscoverArtifacts",PBIMETADATARESTAPIGCC.DiscoverArtifacts,"Function","DiscoverArtifacts",true},    
             {"GetALMPipelineOperation","GetALMPipelineOperation",@PBIMETADATARESTAPIGCC.GetALMPipelineOperation,"Function","GetALMPipelineOperation",true},
+            {"GetALMPipelineStageDifferences","GetALMPipelineStageDifferences",@PBIMETADATARESTAPIGCC.GetALMPipelineStageDifferences,"Function","GetALMPipelineStageDifferences",true},
+            {"DiscoverArtifacts","DiscoverArtifacts",PBIMETADATARESTAPIGCC.DiscoverArtifacts,"Function","DiscoverArtifacts",true},    
             /* Datasets */
             {"GetSharedDatasets","GetSharedDatasets",PBIMETADATARESTAPIGCC.GetSharedDatasets,"Function","GetSharedDatasets",true},   
             {"GetOneDriveRefreshEnforcementPolicy","GetOneDriveRefreshEnforcementPolicy",PBIMETADATARESTAPIGCC.GetOneDriveRefreshEnforcementPolicy,"Function","GetOneDriveRefreshEnforcementPolicy",true}
@@ -247,7 +248,49 @@ GetALMPipelineOperation = (optional pipelineID as text, optional operationID) =>
     let
         result = GetMetadataJSON("/metadata/almpipelines/" & pipelineID & "/operations/" & operationID)
     in
-        result;           
+        result; 
+
+// GetALMPipelineStageDifferences
+shared PBIMETADATARESTAPIGCC.GetALMPipelineStageDifferences = Value.ReplaceType(
+    GetALMPipelineStageDifferences,
+    GetALMPipelineStageDifferencesType
+);
+
+GetALMPipelineStageDifferencesType = type function (
+    optional pipelineID as (
+        type text meta [
+            Documentation.FieldCaption = "Internal Pipeline ID",
+            Documentation.FieldDescription = "Internal Pipeline ID",
+            Documentation.SampleValues = {
+                "123"
+            }
+        ]
+    ),
+    optional stageID as (
+        type text meta [
+            Documentation.FieldCaption = "Integer representing target workspace in pipeline (ex. 1)",
+            Documentation.FieldDescription = "Integer representing target workspace in pipeline (ex. 1)",
+            Documentation.SampleValues = {
+                "1"
+            }
+        ]
+    )    
+) as table meta [
+    Documentation.Name = "PBIMETADATARESTAPIGCC.GetALMPipelineStageDifferences",
+    Documentation.LongDescription = "Returns a list comparing the source and target stage artifacts",
+    Documentation.Examples = {
+        [
+            Code = "=PBIMETADATARESTAPIGCC.GetALMPipelineStageDifferences(""123"",""2"")",
+            Result = "Non-traditional API endpoint"
+        ]
+    }
+];
+
+GetALMPipelineStageDifferences = (optional pipelineID as text, optional stageID as text) =>
+    let
+        result = GetMetadataJSON("/metadata/almpipelines/" & pipelineID & "/stages/" & stageID & "/diff")
+    in
+        result;                   
 
 // DiscoverArtifacts 
 

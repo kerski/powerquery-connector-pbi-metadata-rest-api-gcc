@@ -5,23 +5,26 @@ shared MyExtension.UnitTest =
     // Put any common variables here if you only want them to be evaluated once
     Source = PBIMETADATARESTAPIGCC.FunctionCatalog(),
    
-    /*Variables*/ 
+    /*Variables*/
     RefreshID = "{REFRESH_ID}",
-    /* App Details GUID */
+    /* App Details GUID */ 
     AppDetailsGUID = "{APP_DETAILS_GUID}",
-    /* Internal Workspace ID*/
+    /* Internal Workspace ID */
     WorkspaceID = "{WORKSPACE_ID}",
     /* Workspace GUID */
     WorkspaceGUID = "{WORKSPACE_GUID}",
-    /* Internal Dataset ID */
+    /* Internal Dataset ID */ 
     DatasetID = "{DATASET_ID}",
 
     /* Pipeline ID */
     PipelineID = "{PIPELINE_ID}",
+    StageID = "{STAGE_ID}",
     SourceGUID = "{SOURCE_GUID}",
     TargetGUID = "{TARGET_GUID}",
     TypeName = "dataset",
     PipelineOperationID = "{PIPELINE_OPERATION_ID}",
+  
+
 
     // Extracts Function from group
     _GetFunction = (_func_key as text) =>
@@ -42,6 +45,7 @@ shared MyExtension.UnitTest =
     GetALMPipelines = _GetFunction("GetALMPipelines"),
     DiscoverArtifacts = _GetFunction("DiscoverArtifacts"),
     GetALMPipelineOperation = _GetFunction("GetALMPipelineOperation"),
+    GetALMPipelineStageDifferences = _GetFunction("GetALMPipelineStageDifferences"),
     // Fact(<Name of the Test>, <Expected Value>, <Actual Value>)
     // <Expected Value> and <Actual Value> can be a literal or let statement  
     facts =
@@ -113,7 +117,15 @@ shared MyExtension.UnitTest =
         Fact("GetALMPipelineOperation Should Return a List",
                true,
                List.Count(Record.ToList(Json.Document(GetALMPipelineOperation(PipelineID,PipelineOperationID)))) > 0
-        ),        
+        ),
+        Fact("GetALMPipelineStageDifferences Should Be a Function",
+                true,
+                Value.Is(GetALMPipelineStageDifferences,Function.Type)
+        ), 
+        Fact("GetALMPipelineStageDifferences Should Return a List",
+               true,
+               List.Count(Record.ToList(Json.Document(GetALMPipelineStageDifferences(PipelineID,StageID)))) > 0
+        ),                
         /*****************
         Datasets
         *****************/
